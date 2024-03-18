@@ -9,9 +9,15 @@ const screenHeight = 300;
 
 var screenSelector = "start";
 var player;
+var score;
+var nextSpawn;
+var obstacles;
 
 const playerWidth = 40;
 const playerHeight = 40;
+
+const obstacleWidth = playerWidth;
+const obstacleHeight = playerHeight;
 
 function preload(){
     gameBackground = loadImage('Images/GameBackground.webp');
@@ -26,16 +32,8 @@ function setup(){
      
     floor = new Sprite(windowWidth/2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
-    world.gravity.y=50;
+    world.gravity.y=10;
     
-    document.addEventListener("keydown", function(event) {
-    console.log("Key pressed! + player.y");
-    if (screenSelector == "start" || screenSelector == "end"){
-        screenSelector="game"
-        resetGame();
-            }
-    });
-
     document.addEventListener("keydown", function(event) {
     console.log("Key pressed! + player.y");
     if (screenSelector == "start" || screenSelector == "end"){
@@ -49,28 +47,12 @@ function setup(){
         }
     });
     
-    document.addEventListener("keydown", function(event){
-        if(event.code === 'ArrowLeft') {
-            player.vel.x = -10;
-        }
-        else if(event.code === 'ArrowRight') {
-            player.vel.x = 10;
-        }
-    });
-    document.addEventListener("keyup", function(event) {
-        if(event.code === 'ArrowRight') {
-            player.vel.x = 0;
-        }
-        else if(event.code === 'ArrowLeft')
-        player.vel.x = 0;
-    })
-    
     document.addEventListener("keydown", function(event) {
         if(event.code === 'ArrowUp') {
-            player.vel.y = -10;
+            player.vel.y = -5;
         }
         else if(event.code === 'ArrowDown') {
-            player.vel.y = 10;
+            player.vel.y = 5;
         }
     });
     document.addEventListener("keyup", function(event) {
@@ -119,7 +101,7 @@ function startScreen(){
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Welcome to Dineth's copyright adventure", 50, 50);
+    text("Welcome to the game", 50, 50);
     textSize(24);
     text("Press any key to start", 50, 110);
     }
