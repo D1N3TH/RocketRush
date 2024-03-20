@@ -37,13 +37,6 @@ function setup() {
     floor.color = color('black')
     world.gravity.y = 10;
 
-    document.addEventListener("keydown", function(event) {
-        console.log("Key pressed!");
-        if (screenSelector == "start" || screenSelector == "end") {
-            screenSelector = "game"
-            resetGame();
-        }
-    })
 };
 
 document.addEventListener("keydown", function(event) {
@@ -111,9 +104,19 @@ function startScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Welcome to the game", 50, 50);
+    text("Welcome to Rocket Rush", 50, 50);
     textSize(24);
-    text("Press any key to start", 50, 110);
+    text("Press Enter to Start", 50, 110);
+
+    document.addEventListener("keydown", function(event) {
+        if (event.code === "Enter") {
+            console.log("Key pressed!");
+            if (screenSelector == "start" || screenSelector == "end") {
+                screenSelector = "game"
+                resetGame();
+            }
+        }
+    })
 }
 
 function gameScreen() {
