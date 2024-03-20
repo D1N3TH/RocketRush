@@ -77,6 +77,8 @@ function draw() {
     } else if (screenSelector == "start") {
         startScreen();
     } else if (screenSelector == "instructions") {
+        instructions();
+    } else {
         text("wrong screen - you shouldnt get here", 50, 50);
         console.log("wrong screen - you shouldnt get here")
     }
@@ -117,6 +119,14 @@ function startScreen() {
             }
         }
     })
+
+    document.addEventListener("keydown", function(event) {
+        if (event.code === "KeyI") {
+            console.log("Key pressed!");
+            screenSelector = "instructions"
+            instructions();
+        }
+    })
 }
 
 function gameScreen() {
@@ -143,11 +153,11 @@ function endScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("You died! Too bad :-(", 50, 50);
+    text("You died! Better luck next time :-(", 50, 50);
     textSize(24);
     text("your score was: " + score, 50, 110);
     textSize(14);
-    text("press any key to restart", 50, 150);
+    text("Press R to restart", 50, 150);
 }
 
 function resetGame() {
@@ -158,7 +168,7 @@ function resetGame() {
 }
 
 function instructions() {
-    console.log("Instructions")
+    console.log("instructions")
     background("red")
     allSprites.visible = false;
     textSize(32);
