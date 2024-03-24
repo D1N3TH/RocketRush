@@ -41,30 +41,26 @@ function setup() {
 
 document.addEventListener("keydown", function(event) {
     if (event.code === 'ArrowUp') {
-        player.vel.y = -5;
-    } else if (event.code === 'ArrowDown') {
-        player.vel.y = 5;
+        player.vel.y = -10;
     }
 });
+
 document.addEventListener("keyup", function(event) {
     if (event.code === 'ArrowUp') {
         player.vel.y = 0;
-    } else if (event.code === 'ArrowDown')
-        player.vel.y = 0;
+    }
 });
 
 document.addEventListener("keydown", function(event) {
     if (event.code === 'KeyW') {
-        player.vel.y = -5;
-    } else if (event.code === 'KeyS') {
-        player.vel.y = 5;
+        player.vel.y = -10;
     }
 });
+
 document.addEventListener("keyup", function(event) {
     if (event.code === 'KeyW') {
         player.vel.y = 0;
-    } else if (event.code === 'KeyS')
-        player.vel.y = 0;
+    }
 });
 /*******************************************************/
 // draw()
@@ -88,6 +84,8 @@ function newObstacle() {
     obstacle = new Sprite((screenWidth - 100), screenHeight - obstacleHeight / 2, obstacleWidth, obstacleHeight, 'k');
     obstacle.color = color("lightgreen");
     obstacle.vel.x = -10;
+    obstacle.x = 1400;
+    obstacle.y = Math.round(random(20, 0 + screenWidth));
     obstacles.add(obstacle);
 }
 
