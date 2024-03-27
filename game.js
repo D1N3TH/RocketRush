@@ -4,22 +4,27 @@
 /*******************************************************/
 console.log("%c Rocket Rush", "color: blue;");
 
+//Screen size
 const screenWidth = 600;
 const screenHeight = 300;
 
-var screenSelector = "start";
+//Player
 var player;
-var score = 0;
-var nextSpawn = 0;
-var missiles;
-var spawnDist = 0 + 1;
-
 const playerWidth = 40;
 const playerHeight = 40;
 
+//Missiles
+var missiles;
 const missileWidth = playerWidth;
 const missileHeight = playerHeight;
 
+//Other variables
+var screenSelector = "start";
+var score = 0;
+var nextSpawn = 0;
+var spawnDist = 0 + 1;
+
+//Load images in advance
 function preload() {
     gameBackground = loadImage('Images/GameBackground.webp');
     startBackground = loadImage('Images/startImage.jpg');
@@ -41,6 +46,7 @@ function setup() {
 
 };
 
+//Player controls for flying jetpack
 document.addEventListener("keydown", function(event) {
     if (event.code === 'ArrowUp') {
         player.vel.y = -10;
@@ -67,6 +73,7 @@ document.addEventListener("keyup", function(event) {
 /*******************************************************/
 // draw()
 /*******************************************************/
+//Screen Selectors
 function draw() {
     if (screenSelector == "game") {
         gameScreen();
@@ -82,6 +89,7 @@ function draw() {
     }
 }
 
+//Create missiles
 function newMissile() {
     missile = new Sprite((screenWidth - 100), screenHeight - missileHeight / 2, missileWidth, missileHeight, 'k');
     missile.addImage(missileI);
@@ -92,12 +100,14 @@ function newMissile() {
     missiles.add(missile);
 }
 
+//Player dies if collision with missile
 function youDead(_player, _missile) {
     screenSelector = "end";
     player.remove();
     missiles.removeAll();
 }
 
+//Welcomes the user to game
 function startScreen() {
     console.log("Start screen")
     background(startBackground);
@@ -130,6 +140,7 @@ function startScreen() {
     })
 }
 
+//Create score
 function gameScreen() {
     background(gameBackground);
     allSprites.visible = true;
@@ -146,6 +157,7 @@ function gameScreen() {
     text(score, 50, 50);
 }
 
+//Change to this screen when player dies
 function endScreen() {
     console.log("YouDied")
     background("red")
@@ -169,6 +181,7 @@ function resetGame() {
     score = 0;
 }
 
+//Teaches how to to play the game
 function instructions() {
     console.log("instructions")
     background("red")
