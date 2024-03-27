@@ -11,18 +11,20 @@ var screenSelector = "start";
 var player;
 var score = 0;
 var nextSpawn = 0;
-var obstacles;
+var missiles;
 var spawnDist = 0 + 1;
 
 const playerWidth = 40;
 const playerHeight = 40;
 
-const obstacleWidth = playerWidth;
-const obstacleHeight = playerHeight;
+const missileWidth = playerWidth;
+const missileHeight = playerHeight;
 
 function preload() {
     gameBackground = loadImage('Images/GameBackground.webp');
     startBackground = loadImage('Images/startImage.jpg');
+    missileI = loadImage('Images/missile.png');
+    playerI = loadImage('Images/jetpack.png');
 }
 /*******************************************************/
 // setup()
@@ -31,7 +33,7 @@ function setup() {
     console.log("setup: ");
     cnv = new Canvas(windowWidth, windowHeight)
 
-    obstacles = new Group();
+    missiles = new Group();
 
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
@@ -80,19 +82,20 @@ function draw() {
     }
 }
 
-function newObstacle() {
-    obstacle = new Sprite((screenWidth - 100), screenHeight - obstacleHeight / 2, obstacleWidth, obstacleHeight, 'k');
-    obstacle.color = color("lightgreen");
-    obstacle.vel.x = -10;
-    obstacle.x = 1400;
-    obstacle.y = Math.round(random(20, 0 + screenWidth));
-    obstacles.add(obstacle);
+function newMissile() {
+    missile = new Sprite((screenWidth - 100), screenHeight - missileHeight / 2, missileWidth, missileHeight, 'k');
+    missile.addImage(missileI);
+    missile.vel.x = -10;
+    missile.scale = 0.5;
+    missile.x = 1400;
+    missile.y = Math.round(random(20, 0 + screenWidth));
+    missiles.add(missile);
 }
 
-function youDead(_player, _obstacle) {
+function youDead(_player, _missile) {
     screenSelector = "end";
     player.remove();
-    obstacles.removeAll();
+    missiles.removeAll();
 }
 
 function startScreen() {
@@ -132,7 +135,7 @@ function gameScreen() {
     allSprites.visible = true;
     score++;
     if (frameCount > nextSpawn) {
-        newObstacle();
+        newMissile();
         nextSpawn = frameCount + random(10, 100);
     }
 
@@ -160,8 +163,9 @@ function endScreen() {
 
 function resetGame() {
     player = new Sprite(playerWidth * 1.2, screenHeight / 2, playerWidth, playerHeight, 'd');
-    player.color = color("yellow")
-    player.collides(obstacles, youDead);
+    player.addImage(playerI);
+    player.scale = 0.2;
+    player.collides(missiles, youDead);
     score = 0;
 }
 
