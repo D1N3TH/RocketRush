@@ -10,13 +10,13 @@ const screenHeight = 300;
 
 //Player
 var player;
-const playerWidth = 40;
-const playerHeight = 40;
+const playerWidth = 80;
+const playerHeight = 80;
 
 //Missiles
 var missiles;
-const missileWidth = playerWidth;
-const missileHeight = playerHeight;
+var missileWidth = 150;
+var missileHeight = 25;
 
 //Other variables
 var screenSelector = "start";
@@ -42,6 +42,8 @@ function setup() {
 
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
+    ceiling = new Sprite(0, 0, windowWidth * 2, 4, 's')
+    ceiling.color = color('black')
     world.gravity.y = 10;
 
 };
@@ -93,8 +95,8 @@ function draw() {
 function newMissile() {
     missile = new Sprite((screenWidth - 100), screenHeight - missileHeight / 2, missileWidth, missileHeight, 'k');
     missile.addImage(missileI);
+    missileI.resize(200, 200)
     missile.vel.x = -10;
-    missile.scale = 0.5;
     missile.x = 1400;
     missile.y = Math.round(random(20, 0 + screenWidth));
     missiles.add(missile);
@@ -176,8 +178,8 @@ function endScreen() {
 function resetGame() {
     player = new Sprite(playerWidth * 1.2, screenHeight / 2, playerWidth, playerHeight, 'd');
     player.addImage(playerI);
-    player.scale = 0.2;
     player.collides(missiles, youDead);
+    playerI.resize(80, 80);
     score = 0;
 }
 
