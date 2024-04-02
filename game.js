@@ -18,6 +18,9 @@ var missiles;
 var missileWidth = 150;
 var missileHeight = 25;
 
+var coinWidth = 50;
+var coinHeight = 50;
+
 //Other variables
 var screenSelector = "start";
 var score = 0;
@@ -30,6 +33,7 @@ function preload() {
     startBackground = loadImage('Images/startImage.jpg');
     missileI = loadImage('Images/missile.png');
     playerI = loadImage('Images/jetpack.png');
+    coinI = loadImage('Images/coin.png');
 }
 /*******************************************************/
 // setup()
@@ -39,6 +43,7 @@ function setup() {
     cnv = new Canvas(windowWidth, windowHeight)
 
     missiles = new Group();
+    coins = new Group();
 
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
@@ -109,6 +114,16 @@ function youDead(_player, _missile) {
     missiles.removeAll();
 }
 
+function newCoin() {
+    coin = new Sprite((screenWidth - 100), screenHeight - coinHeight / 2, coinWidth, coinHeight, 'k');
+    coin.addImage(coinI);
+    coinI.resize(coinWidth, coinHeight)
+    coin.vel.x = -10;
+    coin.x = 1400;
+    coin.y = Math.round(random(20, 0 + screenWidth));
+    coins.add(coin);
+}
+
 //Welcomes the user to game
 function startScreen() {
     console.log("Start screen")
@@ -149,6 +164,7 @@ function gameScreen() {
     score++;
     if (frameCount > nextSpawn) {
         newMissile();
+        newCoin();
         nextSpawn = frameCount + random(10, 100);
     }
 
