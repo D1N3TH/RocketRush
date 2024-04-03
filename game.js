@@ -29,7 +29,7 @@ var spawnDist = 0 + 1;
 
 //Load images in advance
 function preload() {
-    gameBackground = loadImage('Images/GameBackground.webp');
+    gameBackground = loadImage('Images/background.jpg');
     startBackground = loadImage('Images/startImage.jpg');
     missileI = loadImage('Images/missile.png');
     playerI = loadImage('Images/jetpack.png');
