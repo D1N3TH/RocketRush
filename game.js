@@ -52,7 +52,9 @@ function setup() {
     ceiling.color = color('black')
     world.gravity.y = 10;
 
-};
+    score = 0;
+    coinCount = 0;
+}
 
 //Player controls for flying jetpack
 document.addEventListener("keydown", function(event) {
@@ -170,6 +172,7 @@ function gameScreen() {
         nextSpawn = frameCount + random(10, 100);
     }
     
+    // Check for coin collision
     if (player.collides(coin, playerHitCoin)){
         playerHitCoin();
     }
@@ -179,6 +182,7 @@ function gameScreen() {
     stroke(0);
     strokeWeight(4);
     text(score, 50, 50);
+    text("Coins: " + coinCount, 50, 100);
 }
 
 function playerHitCoin(){
