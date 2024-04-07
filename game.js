@@ -64,6 +64,10 @@ function setup() {
     coinCount = 0;
     lives = 3;
 }
+
+ // Ask the user for their name and age
+  var userName = prompt("Please enter your name:");
+  var userAge = prompt("Please enter your age:");
 /*******************************************************/
 // draw()
 /*******************************************************/
@@ -78,6 +82,8 @@ function draw() {
         startScreen();
     } else if (screenSelector == "instructions") {
         instructions();
+    } else if (screenSelector == "young"){
+        tooYoung();
     } else {
         text("wrong screen - you shouldnt get here", 50, 5)
         console.log("wrong screen - you shouldnt get here")
@@ -152,6 +158,9 @@ function playerHitCoin() {
     coins.remove(coin);
 }
 
+function tooYoung(){
+background(startBackground);
+}
 //Screen functions
 /******************************************************/
 //Welcomes the user to game
@@ -164,7 +173,7 @@ function startScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Welcome to Rocket Rush", 50, 50);
+    text("Hello " + userName + ", welcome to Rocket Rush!", 50, 50);
     textSize(24);
     text("Press Enter to Start", 50, 110);
 
