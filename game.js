@@ -24,6 +24,7 @@ var coinHeight = 50;
 //Other variables
 var screenSelector = "start";
 var score = 0;
+var coinCount = 0;
 var nextSpawn = 0;
 var spawnDist = 0 + 1;
 
@@ -91,7 +92,7 @@ function draw() {
     } else if (screenSelector == "instructions") {
         instructions();
     } else {
-        text("wrong screen - you shouldnt get here", 50, 50);
+        text("wrong screen - you shouldnt get here", 50, 5)
         console.log("wrong screen - you shouldnt get here")
     }
 }
@@ -117,7 +118,8 @@ function youDead(_player, _missile) {
 function newCoin() {
     coin = new Sprite((screenWidth - 100), screenHeight - coinHeight / 2, coinWidth, coinHeight, 'k');
     coin.addImage(coinI);
-    coinI.resize(coinWidth, coinHeight)
+    coin.collides(player, playerHitCoin);
+    coinI.resize(coinWidth, coinHeight);
     coin.vel.x = -10;
     coin.x = 1400;
     coin.y = Math.round(random(20, 0 + screenWidth));
@@ -167,12 +169,22 @@ function gameScreen() {
         newCoin();
         nextSpawn = frameCount + random(10, 100);
     }
+    
+    if (player.collides(coin, playerHitCoin)){
+        playerHitCoin();
+    }
 
     textSize(32);
     fill(255);
     stroke(0);
     strokeWeight(4);
     text(score, 50, 50);
+}
+
+function playerHitCoin(){
+    console.log("addCoin")
+    coinCount++;
+    coins.remove(coin);
 }
 
 //Change to this screen when player dies
@@ -197,6 +209,7 @@ function resetGame() {
     player.collides(missiles, youDead);
     playerI.resize(80, 80);
     score = 0;
+    coinCount = 0;
 }
 
 //Teaches how to to play the game
