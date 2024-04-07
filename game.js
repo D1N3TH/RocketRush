@@ -48,12 +48,14 @@ function setup() {
     SCREEN_WIDTH = windowWidth;
     SCREEN_HEIGHT = windowHeight;
     
+    // Create groups of missiles and coins
     missiles = new Group();
     coins = new Group();
-
+//Create the floor
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
     
+    //Create the ceiling
     ceiling = new Sprite(0, 0, windowWidth * 2, 4, 's')
     ceiling.color = color('black')
 
@@ -67,6 +69,7 @@ function setup() {
 /*******************************************************/
 //Screen Selectors
 function draw() {
+    // Run the appropriate function based on the current screen
     if (screenSelector == "game") {
         gameScreen();
     } else if (screenSelector == "end") {
@@ -81,6 +84,7 @@ function draw() {
     }
 }
 
+function playerControls(){
 //Player controls for flying jetpack
 document.addEventListener("keydown", function(event) {
     if (event.code === 'ArrowUp') {
@@ -105,6 +109,7 @@ document.addEventListener("keyup", function(event) {
         player.vel.y = 0;
     }
 });
+}
 
 //Create missiles
 function newMissile() {
@@ -198,8 +203,7 @@ function instructions() {
     text("Avoid obstacles, collect coins, and try get a higher score");
 }
 
-
-//Create score
+//During the game
 function gameScreen() {
     background(gameBackground);
     allSprites.visible = true;
@@ -222,6 +226,9 @@ function gameScreen() {
     text("Score: " + score, 50, 50);
     text("Coins: " + coinCount, 50, 100);
     text("Lives: " + lives, 50, 150); // Display the number of lives next to the score
+
+playerControls();
+    
 }
 
 //Game over screen
