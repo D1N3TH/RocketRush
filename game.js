@@ -5,28 +5,29 @@
 console.log("%c Rocket Rush", "color: blue;");
 
 //Screen size
-const screenWidth = 600;
-const screenHeight = 300;
+const SCREEN_WIDTH = 600;
+const SCREEN_HEIGHT = 300;
 
 //Player
-var player;
-const playerWidth = 80;
-const playerHeight = 80;
+let player;
+const PLAYER_WIDTH = 80;
+const PLAYER_HEIGHT = 80;
 
 //Missiles
-var missiles;
-var missileWidth = 150;
-var missileHeight = 25;
+let missiles;
+const MISSILE_WIDTH = 150;
+const MISSILE_HEIGHT = 25;
 
-var coinWidth = 50;
-var coinHeight = 50;
+//Coins
+const COIN_WIDTH = 50;
+const COIN_HEIGHT = 50;
 
 //Other variables
-var screenSelector = "start";
-var score = 0;
-var coinCount = 0;
-var nextSpawn = 0;
-var spawnDist = 0 + 1;
+let screenSelector = "start";
+let score = 0;
+let coinCount = 0;
+let nextSpawn = 0;
+let spawnDist = 0 + 1;
 
 //Load images in advance
 function preload() {
@@ -101,30 +102,33 @@ function draw() {
 
 //Create missiles
 function newMissile() {
-    missile = new Sprite((screenWidth - 100), screenHeight - missileHeight / 2, missileWidth, missileHeight, 'k');
+    //create a new missile object with the following properties
+    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
     missile.addImage(missileI);
     missileI.resize(200, 200)
     missile.vel.x = -10;
     missile.x = 1400;
-    missile.y = Math.round(random(20, 0 + screenWidth));
+    missile.y = Math.round(random(20, 0 + SCREEN_WIDTH));
     missiles.add(missile);
 }
 
 //Player dies if collision with missile
 function youDead(_player, _missile) {
+    //change the screen to the end screen and remove the player and missiles
     screenSelector = "end";
     player.remove();
     missiles.removeAll();
 }
 
 function newCoin() {
-    coin = new Sprite((screenWidth - 100), screenHeight - coinHeight / 2, coinWidth, coinHeight, 'k');
+    //create a new coin object with the following properties
+    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_HEIGHT / 2, COIN_WIDTH, COIN_HEIGHT, 'k');
     coin.addImage(coinI);
     coin.collides(player, playerHitCoin);
-    coinI.resize(coinWidth, coinHeight);
+    coinI.resize(COIN_WIDTH, COIN_HEIGHT);
     coin.vel.x = -10;
     coin.x = 1400;
-    coin.y = Math.round(random(20, 0 + screenWidth));
+    coin.y = Math.round(random(20, 0 + SCREEN_WIDTH));
     coins.add(coin);
 }
 
@@ -171,9 +175,9 @@ function gameScreen() {
         newCoin();
         nextSpawn = frameCount + random(10, 100);
     }
-    
+
     // Check for coin collision
-    if (player.collides(coin, playerHitCoin)){
+    if (player.collides(coin, playerHitCoin)) {
         playerHitCoin();
     }
 
@@ -185,7 +189,7 @@ function gameScreen() {
     text("Coins: " + coinCount, 50, 100);
 }
 
-function playerHitCoin(){
+function playerHitCoin() {
     console.log("addCoin")
     coinCount++;
     coins.remove(coin);
@@ -208,10 +212,12 @@ function endScreen() {
 }
 
 function resetGame() {
-    player = new Sprite(playerWidth * 1.2, screenHeight / 2, playerWidth, playerHeight, 'd');
+    //create a new player object and add it to game
+    player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT, 'd');
     player.addImage(playerI);
     player.collides(missiles, youDead);
     playerI.resize(80, 80);
+    //reset score and coinCount to 0 at the start of each run
     score = 0;
     coinCount = 0;
 }
