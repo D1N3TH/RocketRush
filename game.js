@@ -250,8 +250,19 @@ function gameScreen() {
     }
 
     // Check for coin collision
-    if (player.collides(coin, playerHitCoin)) {
-        playerHitCoin();
+    for (let i = coins.length - 1; i >= 0; i--) {
+        let c = coins[i];
+        c.position.x += c.velocity.x;
+        c.position.y += c.velocity.y;
+
+        // Check for collision between player and coin
+        if (player.overlap(c)) {
+            // Remove the coin
+            c.remove();
+            
+            // Increase the coin count
+            coinCount++;
+        }
     }
 
     textSize(32);
