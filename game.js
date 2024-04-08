@@ -50,6 +50,7 @@ function setup() {
     // Create groups of missiles and coins
     missiles = new Group();
     coins = new Group();
+    
 //Create the floor
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
@@ -119,12 +120,10 @@ document.addEventListener("keyup", function(event) {
 //Create missiles
 function newMissile() {
     //create a new missile object with the following properties
-    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT,'k');
+    missile = new Sprite(SCREEN_WIDTH, Math.round(random(20, SCREEN_WIDTH)), MISSILE_WIDTH, MISSILE_HEIGHT,'k');
     missile.addImage(missileI);
-    missileI.resize(200, 200)
+    missileI.resize(200, 200);
     missile.vel.x = -10;
-    missile.x = 1400;
-    missile.y = Math.round(random(20, SCREEN_WIDTH));
     missiles.add(missile);
 }
 
@@ -134,7 +133,7 @@ function loseLife(_player, _missile) {
     _missile.remove();
     
     //Lose life and if run out of lives, change to end screen and remove the player and missiles
-    if (lives < 1) {
+    if (lives <= 0) {
     screenSelector = "end";
     player.remove();
     missiles.removeAll();
@@ -144,13 +143,11 @@ function loseLife(_player, _missile) {
 
 function newCoin() {
     //create a new coin object with the following properties
-    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_DIAMETER / 2, COIN_DIAMETER, COIN_DIAMETER, 'k');
+    coin = new Sprite(SCREEN_WIDTH, Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
    coin.addImage(coinI);
     coin.overlaps(player, playerHitCoin);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     coin.vel.x = -10;
-    coin.x = 1400;
-    coin.y = Math.round(random(20, SCREEN_WIDTH));
     coins.add(coin);
 }
 
