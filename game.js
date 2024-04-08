@@ -15,8 +15,7 @@ const MISSILE_WIDTH = 150;
 const MISSILE_HEIGHT = 25;
 
 //Coins
-const COIN_WIDTH = 50;
-const COIN_HEIGHT = 50;
+const COIN_DIAMETER = 50;
 
 //Other variables
 let screenSelector = "start";
@@ -40,7 +39,7 @@ function preload() {
 // Create the player and the groups of missiles and coins
 function setup() {
     console.log("setup: ");
-    cnv = new Canvas(windowWidth, windowHeight)
+    new Canvas(windowWidth, windowHeight)
 
     // Add gravity to the world
     world.gravity.y = 10;
@@ -120,7 +119,7 @@ document.addEventListener("keyup", function(event) {
 //Create missiles
 function newMissile() {
     //create a new missile object with the following properties
-    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
+    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT,'k');
     missile.addImage(missileI);
     missileI.resize(200, 200)
     missile.vel.x = -10;
@@ -131,6 +130,9 @@ function newMissile() {
 
 //Player loses life if collision with missile
 function loseLife(_player, _missile) {
+    //remove the missile
+    _missile.remove();
+    
     //Lose life and if run out of lives, change to end screen and remove the player and missiles
     if (lives < 1) {
     screenSelector = "end";
@@ -142,10 +144,10 @@ function loseLife(_player, _missile) {
 
 function newCoin() {
     //create a new coin object with the following properties
-    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_HEIGHT / 2, COIN_WIDTH, COIN_HEIGHT, 'k');
+    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_DIAMETER / 2, COIN_DIAMETER, COIN_DIAMETER, 'k');
    coin.addImage(coinI);
-    coin.collides(player, playerHitCoin);
-    coinI.resize(COIN_WIDTH, COIN_HEIGHT);
+    coin.overlaps(player, playerHitCoin);
+    coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     coin.vel.x = -10;
     coin.x = 1400;
     coin.y = Math.round(random(20, SCREEN_WIDTH));
@@ -212,7 +214,7 @@ function instructions() {
     text("Avoid obstacles, collect coins, and try get a higher score");
 }
 
-//During the game
+// During the game
 function gameScreen() {
     background(gameBackground);
     allSprites.visible = true;
@@ -221,6 +223,30 @@ function gameScreen() {
         newMissile();
         newCoin();
         nextSpawn = frameCount + random(10, 30);
+    }
+
+    // Update player's position based on controls
+    playerControls();
+
+    // Check for collisions with missiles
+    for (let i = missiles.length - 1; i >= 0; i--) {
+        let m = missiles[i];
+        m.position.x += m.velocity.x;
+        m.position.y += m.velocity.y;
+
+        // Check for collision between player and missile
+        if (player.overlap(m)) {
+            // Remove the missile
+            m.remove();
+            
+            // Lose life and if run out of lives, change to end screen
+            if (lives < 1) {
+                screenSelector = "end";
+                player.remove();
+                missiles.removeAll();
+            }
+            lives--; // Decrease the lives variable by 1 when the player collides with a missile
+        }
     }
 
     // Check for coin collision
@@ -235,10 +261,8 @@ function gameScreen() {
     text("Score: " + score, 50, 50);
     text("Coins: " + coinCount, 50, 100);
     text("Lives: " + lives, 50, 150); // Display the number of lives next to the score
-
-playerControls();
-    
 }
+
 
 //Game over screen
 function endScreen() {
@@ -265,7 +289,7 @@ function endScreen() {
 
 function resetGame() {
     //create a new player object and add it to game
-    player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT, 'd');
+    player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT,'d');
     player.addImage(playerI);
     player.collides(missiles, loseLife);
     playerI.resize(80, 80);
