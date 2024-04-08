@@ -154,10 +154,10 @@ function newCoin() {
     coins.add(coin);
 }
 
-function playerHitCoin() {
+function playerHitCoin(_coin, _player) {
     console.log("addCoin")
     coinCount++;
-    coins.remove(coin);
+    _coin.remove();
 }
 
 function tooYoung(){
