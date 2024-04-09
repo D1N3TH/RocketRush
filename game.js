@@ -26,6 +26,8 @@ let spawnDist = 1;
 let lives = 3;
 let userNameIsInvalid = true;
 let userName;
+let scoreIncrementCounter = 0; // Counter to control score incrementation speed
+const SCORE_INCREMENT_DELAY = 5; // Adjust this value to control the speed of score incrementation
 
 //Load images in advance
 function preload() {
@@ -228,7 +230,16 @@ function instructions() {
 function gameScreen() {
     background(gameBackground);
     allSprites.visible = true;
-    score++;
+    
+        // Increment the score increment counter
+    scoreIncrementCounter++;
+
+    // Increment the score if the counter reaches the delay threshold
+    if (scoreIncrementCounter >= SCORE_INCREMENT_DELAY) {
+        score++;
+        scoreIncrementCounter = 0; // Reset the counter
+    }
+    
     if (frameCount > nextSpawn) {
         newMissile();
         newCoin();
