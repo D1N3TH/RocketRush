@@ -132,7 +132,7 @@ function newMissile() {
 function loseLife(_player, _missile) {
     //remove the missile
     _missile.remove();
-    }
+
     lives--; // Decrease the lives variable by 1 when the player collides with a missile
 }
 
