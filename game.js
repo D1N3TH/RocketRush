@@ -24,6 +24,8 @@ let coinCount = 0;
 let nextSpawn = 0;
 let spawnDist = 1;
 let lives = 3;
+let userNameIsInvalid = true;
+let userName;
 
 //Load images in advance
 function preload() {
@@ -50,7 +52,6 @@ function setup() {
     // Create groups of missiles and coins
     missiles = new Group();
     coins = new Group();
-    
 //Create the floor
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
@@ -63,11 +64,9 @@ function setup() {
     score = 0;
     coinCount = 0;
     lives = 3;
+    
+    askUserName();
 }
-
- // Ask the user for their name and age
-  var userName = prompt("Please enter your name:");
-  var userAge = prompt("Please enter your age:");
 /*******************************************************/
 // draw()
 /*******************************************************/
@@ -120,10 +119,12 @@ document.addEventListener("keyup", function(event) {
 //Create missiles
 function newMissile() {
     //create a new missile object with the following properties
-    missile = new Sprite(SCREEN_WIDTH, Math.round(random(20, SCREEN_WIDTH)), MISSILE_WIDTH, MISSILE_HEIGHT,'k');
+    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT,'k');
     missile.addImage(missileI);
-    missileI.resize(200, 200);
+    missileI.resize(200, 200)
     missile.vel.x = -10;
+    missile.x = 1400;
+    missile.y = Math.round(random(20, SCREEN_WIDTH));
     missiles.add(missile);
 }
 
@@ -133,7 +134,7 @@ function loseLife(_player, _missile) {
     _missile.remove();
     
     //Lose life and if run out of lives, change to end screen and remove the player and missiles
-    if (lives <= 0) {
+    if (lives < 1) {
     screenSelector = "end";
     player.remove();
     missiles.removeAll();
@@ -143,11 +144,13 @@ function loseLife(_player, _missile) {
 
 function newCoin() {
     //create a new coin object with the following properties
-    coin = new Sprite(SCREEN_WIDTH, Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
+    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_DIAMETER / 2, COIN_DIAMETER, COIN_DIAMETER, 'k');
    coin.addImage(coinI);
     coin.overlaps(player, playerHitCoin);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     coin.vel.x = -10;
+    coin.x = 1400;
+    coin.y = Math.round(random(20, SCREEN_WIDTH));
     coins.add(coin);
 }
 
@@ -159,6 +162,21 @@ function playerHitCoin(_coin, _player) {
 
 function tooYoung(){
 background(startBackground);
+}
+
+ // Ask the user for their name
+function askUserName() {
+  while (userNameIsInvalid) {
+    userName = prompt("Hello there, \n what is your name?");
+    if (userName == null) {
+      stopPropogation();
+    }
+    if (userName == " " || userName == "" || !isNaN(userName)) {
+      alert("The username was invalid. You must enter a valid username.");
+    } else {
+      userNameIsInvalid = false;
+    }
+  }
 }
 //Screen functions
 /******************************************************/
@@ -267,8 +285,8 @@ function gameScreen() {
     stroke(0);
     strokeWeight(4);
     text("Score: " + score, 50, 50);
-    text("Coins: " + coinCount, 50, 100);
-    text("Lives: " + lives, 50, 150); // Display the number of lives next to the score
+    text("Coins: " + coinCount, 250, 50);
+    text("Lives: " + lives, 450, 50); // Display the number of lives next to the score
 }
 
 
