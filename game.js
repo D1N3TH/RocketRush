@@ -299,6 +299,10 @@ function endScreen() {
 }
 
 function resetGame() {
+        // Check if the player sprite exists and remove it
+    if (player) {
+        player.remove();
+    }
     //create a new player object and add it to game
     player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT,'d');
     player.addImage(playerI);
