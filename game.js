@@ -132,12 +132,6 @@ function newMissile() {
 function loseLife(_player, _missile) {
     //remove the missile
     _missile.remove();
-    
-    //Lose life and if run out of lives, change to end screen and remove the player and missiles
-    if (lives < 1) {
-    screenSelector = "end";
-    player.remove();
-    missiles.removeAll();
     }
     lives--; // Decrease the lives variable by 1 when the player collides with a missile
 }
@@ -257,8 +251,6 @@ function gameScreen() {
             // Lose life and if run out of lives, change to end screen
             if (lives < 1) {
                 screenSelector = "end";
-                player.remove();
-                missiles.removeAll();
             }
             lives--; // Decrease the lives variable by 1 when the player collides with a missile
         }
@@ -299,18 +291,11 @@ function endScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    if (lives == 0) { // Switch to the end screen only if the player has no lives left
         text("You died! Better luck next time :-(", 50, 50);
         textSize(24);
         text("your score was: " + score, 50, 110);
         textSize(14);
         text("Press R to restart", 50, 150);
-    } else {
-        text("You hit a missile! You have " + lives + " lives left.", 50, 50);
-        textSize(24);
-        text("Press Enter to continue", 50, 110);
-        screenSelector = "game";
-    }
 }
 
 function resetGame() {
