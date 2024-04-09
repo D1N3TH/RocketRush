@@ -34,6 +34,7 @@ function preload() {
     missileI = loadImage('Images/missile.png');
     playerI = loadImage('Images/jetpack.png');
     coinI = loadImage('Images/coin.png');
+     heartI = loadImage('Images/heart.png'); // Load the heart icon/image
 }
 /*******************************************************/
 // setup()
@@ -45,17 +46,17 @@ function setup() {
 
     // Add gravity to the world
     world.gravity.y = 10;
-
+    
     SCREEN_WIDTH = windowWidth;
     SCREEN_HEIGHT = windowHeight;
-
+    
     // Create groups of missiles and coins
     missiles = new Group();
     coins = new Group();
-    //Create the floor
+//Create the floor
     floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
     floor.color = color('black')
-
+    
     //Create the ceiling
     ceiling = new Sprite(0, 0, windowWidth * 2, 4, 's')
     ceiling.color = color('black')
@@ -64,7 +65,7 @@ function setup() {
     score = 0;
     coinCount = 0;
     lives = 3;
-
+    
     askUserName();
 }
 /*******************************************************/
@@ -81,7 +82,7 @@ function draw() {
         startScreen();
     } else if (screenSelector == "instructions") {
         instructions();
-    } else if (screenSelector == "young") {
+    } else if (screenSelector == "young"){
         tooYoung();
     } else {
         text("wrong screen - you shouldnt get here", 50, 5)
@@ -89,37 +90,37 @@ function draw() {
     }
 }
 
-function playerControls() {
-    //Player controls for flying jetpack
-    document.addEventListener("keydown", function(event) {
-        if (event.code === 'ArrowUp') {
-            player.vel.y = -10;
-        }
-    });
+function playerControls(){
+//Player controls for flying jetpack
+document.addEventListener("keydown", function(event) {
+    if (event.code === 'ArrowUp') {
+        player.vel.y = -10;
+    }
+});
 
-    document.addEventListener("keyup", function(event) {
-        if (event.code === 'ArrowUp') {
-            player.vel.y = 0;
-        }
-    });
+document.addEventListener("keyup", function(event) {
+    if (event.code === 'ArrowUp') {
+        player.vel.y = 0;
+    }
+});
 
-    document.addEventListener("keydown", function(event) {
-        if (event.code === 'KeyW') {
-            player.vel.y = -10;
-        }
-    });
+document.addEventListener("keydown", function(event) {
+    if (event.code === 'KeyW') {
+        player.vel.y = -10;
+    }
+});
 
-    document.addEventListener("keyup", function(event) {
-        if (event.code === 'KeyW') {
-            player.vel.y = 0;
-        }
-    });
+document.addEventListener("keyup", function(event) {
+    if (event.code === 'KeyW') {
+        player.vel.y = 0;
+    }
+});
 }
 
 //Create missiles
 function newMissile() {
     //create a new missile object with the following properties
-    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
+    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT,'k');
     missile.addImage(missileI);
     missileI.resize(200, 200)
     missile.vel.x = -10;
@@ -139,7 +140,7 @@ function loseLife(_player, _missile) {
 function newCoin() {
     //create a new coin object with the following properties
     coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_DIAMETER / 2, COIN_DIAMETER, COIN_DIAMETER, 'k');
-    coin.addImage(coinI);
+   coin.addImage(coinI);
     coin.overlaps(player, playerHitCoin);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     coin.vel.x = -10;
@@ -154,23 +155,23 @@ function playerHitCoin(_coin, _player) {
     _coin.remove();
 }
 
-function tooYoung() {
-    background(startBackground);
+function tooYoung(){
+background(startBackground);
 }
 
-// Ask the user for their name
+ // Ask the user for their name
 function askUserName() {
-    while (userNameIsInvalid) {
-        userName = prompt("Hello there, \n what is your name?");
-        if (userName == null) {
-            stopPropogation();
-        }
-        if (userName == " " || userName == "" || !isNaN(userName)) {
-            alert("The username was invalid. You must enter a valid username.");
-        } else {
-            userNameIsInvalid = false;
-        }
+  while (userNameIsInvalid) {
+    userName = prompt("Hello there, \n what is your name?");
+    if (userName == null) {
+      stopPropogation();
     }
+    if (userName == " " || userName == "" || !isNaN(userName)) {
+      alert("The username was invalid. You must enter a valid username.");
+    } else {
+      userNameIsInvalid = false;
+    }
+  }
 }
 //Screen functions
 /******************************************************/
@@ -236,6 +237,11 @@ function gameScreen() {
 
     // Update player's position based on controls
     playerControls();
+    
+      // Display hearts for lives
+    for (let i = 0; i < lives; i++) {
+        image(heartI, 540 + i * 40, 15, 50, 50); // Adjust position and size as needed
+    }
 
     // Check for collisions with missiles
     for (let i = missiles.length - 1; i >= 0; i--) {
@@ -247,7 +253,7 @@ function gameScreen() {
         if (player.overlap(m)) {
             // Remove the missile
             m.remove();
-
+            
             // Lose life and if run out of lives, change to end screen
             if (lives <= 1) {
                 screenSelector = "end";
@@ -266,7 +272,7 @@ function gameScreen() {
         if (player.overlap(c)) {
             // Remove the coin
             c.remove();
-
+            
             // Increase the coin count
             coinCount++;
         }
@@ -278,7 +284,7 @@ function gameScreen() {
     strokeWeight(4);
     text("Score: " + score, 50, 50);
     text("Coins: " + coinCount, 250, 50);
-    text("Lives: " + lives, 450, 50); // Display the number of lives next to the score
+    text("Lives:", 450, 50); // Display the number of lives next to the score
 }
 
 
@@ -291,20 +297,20 @@ function endScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("You died! Better luck next time :-(", 50, 50);
-    textSize(24);
-    text("your score was: " + score, 50, 110);
-    textSize(14);
-    text("Press R to restart", 50, 150);
+        text("You died! Better luck next time :-(", 50, 50);
+        textSize(24);
+        text("your score was: " + score, 50, 110);
+        textSize(14);
+        text("Press R to restart", 50, 150);
 }
 
 function resetGame() {
-    // Check if the player sprite exists and remove it
+        // Check if the player sprite exists and remove it
     if (player) {
         player.remove();
     }
     //create a new player object and add it to game
-    player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT, 'd');
+    player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT,'d');
     player.addImage(playerI);
     player.collides(missiles, loseLife);
     playerI.resize(80, 80);
