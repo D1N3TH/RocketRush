@@ -249,7 +249,7 @@ function gameScreen() {
             m.remove();
             
             // Lose life and if run out of lives, change to end screen
-            if (lives < 1) {
+            if (lives <= 1) {
                 screenSelector = "end";
             }
             lives--; // Decrease the lives variable by 1 when the player collides with a missile
