@@ -47,7 +47,7 @@ function setup() {
     new Canvas(windowWidth, windowHeight)
 
     // Add gravity to the world
-    world.gravity.y = 10;
+    world.gravity.y = 20;
     
     SCREEN_WIDTH = windowWidth;
     SCREEN_HEIGHT = windowHeight;
@@ -95,25 +95,13 @@ function draw() {
 function playerControls(){
 //Player controls for flying jetpack
 document.addEventListener("keydown", function(event) {
-    if (event.code === 'ArrowUp') {
+    if (event.code === 'ArrowUp' || 'KeyW') {
         player.vel.y = -10;
     }
 });
 
 document.addEventListener("keyup", function(event) {
-    if (event.code === 'ArrowUp') {
-        player.vel.y = 0;
-    }
-});
-
-document.addEventListener("keydown", function(event) {
-    if (event.code === 'KeyW') {
-        player.vel.y = -10;
-    }
-});
-
-document.addEventListener("keyup", function(event) {
-    if (event.code === 'KeyW') {
+    if (event.code === 'ArrowUp' || 'KeyW') {
         player.vel.y = 0;
     }
 });
@@ -125,7 +113,7 @@ function newMissile() {
     missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT,'k');
     missile.addImage(missileI);
     missileI.resize(200, 200)
-    missile.vel.x = -10;
+    missile.vel.x = -5;
     missile.x = 1400;
     missile.y = Math.round(random(20, SCREEN_WIDTH));
     missiles.add(missile);
@@ -145,7 +133,7 @@ function newCoin() {
    coin.addImage(coinI);
     coin.overlaps(player, playerHitCoin);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
-    coin.vel.x = -10;
+    coin.vel.x = -5;
     coin.x = 1400;
     coin.y = Math.round(random(20, SCREEN_WIDTH));
     coins.add(coin);
@@ -311,8 +299,9 @@ function endScreen() {
         text("You died! Better luck next time :-(", 50, 50);
         textSize(24);
         text("your score was: " + score, 50, 110);
+        text("You collected " + coinCount + " coins.", 50, 150);
         textSize(14);
-        text("Press R to restart", 50, 150);
+        text("Press Enter to restart", 50, 200);
 }
 
 function resetGame() {
@@ -320,6 +309,11 @@ function resetGame() {
     if (player) {
         player.remove();
     }
+    
+        // Clear existing missiles and coins
+    missiles.remove();
+    coins.remove();
+
     //create a new player object and add it to game
     player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT,'d');
     player.addImage(playerI);
