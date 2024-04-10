@@ -29,6 +29,7 @@ let userName;
 let scoreIncrementCounter = 0; // Counter to control score incrementation speed
 const SCORE_INCREMENT_DELAY = 5; // Adjust this value to control the speed of score incrementation
 
+
 //Load images in advance
 function preload() {
     gameBackground = loadImage('Images/background.jpg');
@@ -144,6 +145,22 @@ function newCoin() {
     coins.add(coin);
 }
 
+// Function to update position of missiles and coins
+function updateSprites() {
+    for (let i = missiles.length - 1; i >= 0; i--) {
+        if (missiles[i].position.x < -MISSILE_WIDTH / 2) {
+            missiles[i].position.x = SCREEN_WIDTH + MISSILE_WIDTH / 2;
+            missiles[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+        }
+    }
+    for (let i = coins.length - 1; i >= 0; i--) {
+        if (coins[i].position.x < -COIN_DIAMETER / 2) {
+            coins[i].position.x = SCREEN_WIDTH + COIN_DIAMETER / 2;
+            coins[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+        }
+    }
+}
+
 function playerHitCoin(_coin, _player) {
     console.log("addCoin")
     coinCount++;
@@ -236,8 +253,10 @@ function gameScreen() {
     if (frameCount > nextSpawn) {
         newMissile();
         newCoin();
-        nextSpawn = frameCount + random(10, 30);
+        nextSpawn = frameCount + random(40, 100);
     }
+
+    updateSprites();
 
     // Update player's position based on controls
     playerControls();
