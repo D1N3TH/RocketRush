@@ -24,7 +24,7 @@ let nextSpawn = 0;
 let spawnDist = 1;
 let lives = 3;
 let userName;
-let userNameIsInvalid=true;
+let userNameIsInvalid = true;
 let scoreIncrementCounter = 0; // Counter to control score incrementation speed
 
 /*******************************************************/
@@ -37,7 +37,7 @@ function preload() {
     rocketI = loadImage('Images/rocket.png');
     playerI = loadImage('Images/player.png');
     coinI = loadImage('Images/coin.png');
-    heartI = loadImage('Images/Heart.png');
+    heartI = loadImage('Images/heart.png');
 }
 
 /*******************************************************/
@@ -75,24 +75,24 @@ function setup() {
     playerI.resize(80, 80);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     heartI.resize(25, 0);
-    
-//Key presses
-document.addEventListener("keydown", function(event) {
-    if (event.code === "Enter") {
-        if (screenSelector === "start" || screenSelector === "instructions" || screenSelector === "end") {
-            screenSelector = "game";
-            resetGame();
+
+    //Key presses
+    document.addEventListener("keydown", function(event) {
+        if (event.code === "Enter") {
+            if (screenSelector === "start" || screenSelector === "instructions" || screenSelector === "end") {
+                screenSelector = "game";
+                resetGame();
+            }
+        } else if (event.code === "KeyI" && screenSelector === "start") {
+            console.log("Key pressed!");
+            screenSelector = "instructions";
+            instructions();
+        } else if (event.code === "KeyB" && screenSelector === "instructions") {
+            screenSelector = "start";
+        } else if (event.code === "KeyH" && screenSelector === "end") {
+            screenSelector = "start";
         }
-    } else if (event.code === "KeyI" && screenSelector === "start") {
-        console.log("Key pressed!");
-        screenSelector = "instructions";
-        instructions();
-    } else if (event.code === "KeyB" && screenSelector === "instructions") {
-        screenSelector = "start";
-    } else if (event.code === "KeyH" && screenSelector === "end") {
-        screenSelector = "start";
-    }
-});
+    });
 }
 /*******************************************************/
 // draw()
@@ -152,7 +152,7 @@ function instructions() {
 // During the game
 function gameScreen() {
     background(gameBackground);
-    player.rotate(0,0);
+    player.rotate(0, 0);
     allSprites.visible = true;
 
     // Increment the score increment counter
@@ -310,7 +310,7 @@ function newCoin() {
 
 // Function to update position of rockets and coins
 function updateSprites() {
-        // Remove rockets and coins touching the floor or ceiling
+    // Remove rockets and coins touching the floor or ceiling
     rockets.collide(floor, function(rocket) {
         rocket.remove();
     });
@@ -323,8 +323,8 @@ function updateSprites() {
     coins.collide(ceiling, function(coin) {
         coin.remove();
     });
-    
-       // Reset out-of-bounds rockets and coins
+
+    // Reset out-of-bounds rockets and coins
     rockets.forEach(rocket => {
         if (rocket.position.x < -ROCKET_WIDTH / 2) {
             rocket.position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
