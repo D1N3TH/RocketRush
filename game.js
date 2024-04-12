@@ -313,16 +313,17 @@ function endScreen() {
     allSprites.visible = false;
     coins.vel.x = 0;
     missiles.vel.x = 0;
-    textSize(32);
+    textSize(50);
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Game Over!", 50, 50);
+    text("Game Over!", 375, 100);
     textSize(24);
-    text("Your score was: " + score, 50, 110);
-    text("You collected " + coinCount + " coins.", 50, 150);
-    textSize(14);
-    text("Press Enter to restart", 50, 200);
+    text("Your score was: " + score, 400, 200);
+    text("You collected " + coinCount + " coins.", 400, 230);
+    textSize(30);
+    text("Press Enter to restart", 100, 400);
+    text("Press H to go back Home", 550, 400)
 }
 
 function resetGame() {
