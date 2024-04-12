@@ -160,19 +160,35 @@ function newCoin() {
 
 // Function to update position of rockets and coins
 function updateSprites() {
-    for (let i = rockets.length - 1; i >= 0; i--) {
-        if (rockets[i].position.x < -ROCKET_WIDTH / 2) {
-            rockets[i].position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
-            rockets[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+        // Remove rockets and coins touching the floor or ceiling
+    rockets.collide(floor, function(rocket) {
+        rocket.remove();
+    });
+    coins.collide(floor, function(coin) {
+        coin.remove();
+    });
+    rockets.collide(ceiling, function(rocket) {
+        rocket.remove();
+    });
+    coins.collide(ceiling, function(coin) {
+        coin.remove();
+    });
+    
+       // Reset out-of-bounds rockets and coins
+    rockets.forEach(rocket => {
+        if (rocket.position.x < -ROCKET_WIDTH / 2) {
+            rocket.position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
+            rocket.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
         }
-    }
-    for (let i = coins.length - 1; i >= 0; i--) {
-        if (coins[i].position.x < -COIN_DIAMETER / 2) {
-            coins[i].position.x = SCREEN_WIDTH + COIN_DIAMETER / 2;
-            coins[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+    });
+    coins.forEach(coin => {
+        if (coin.position.x < -COIN_DIAMETER / 2) {
+            coin.position.x = SCREEN_WIDTH + COIN_DIAMETER / 2;
+            coin.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
         }
-    }
+    });
 }
+
 
 function playerHitCoin(_coin, _player) {
     console.log("addCoin")
@@ -234,6 +250,7 @@ function instructions() {
 // During the game
 function gameScreen() {
     background(gameBackground);
+    player.rotate(0,0);
     allSprites.visible = true;
 
     // Increment the score increment counter
