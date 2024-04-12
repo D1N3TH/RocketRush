@@ -4,36 +4,32 @@
 /*******************************************************/
 console.log("%c Rocket Rush", "color: blue;");
 
-//Player
-let player;
-const PLAYER_WIDTH = 80;
-const PLAYER_HEIGHT = 80;
-
-//Rockets
-let rockets;
-const ROCKET_WIDTH = 150;
-const ROCKET_HEIGHT = 25;
-
+//Constants
 const SCREEN_WIDTH = 1000;
 const SCREEN_HEIGHT = 500;
-
-//Coins
+const PLAYER_WIDTH = 80;
+const PLAYER_HEIGHT = 80;
+const ROCKET_WIDTH = 150;
+const ROCKET_HEIGHT = 25;
 const COIN_DIAMETER = 50;
+const SCORE_INCREMENT_DELAY = 5;
 
-//Other variables
+//Global variables
+let player;
+let rockets;
 let screenSelector = "start";
 let score = 0;
 let coinCount = 0;
 let nextSpawn = 0;
 let spawnDist = 1;
 let lives = 3;
-let userNameIsInvalid = true;
 let userName;
+let userNameIsInvalid=true;
 let scoreIncrementCounter = 0; // Counter to control score incrementation speed
-const SCORE_INCREMENT_DELAY = 5; // Adjust this value to control the speed of score incrementation
 
-
-//Load images in advance
+/*******************************************************/
+// Preload
+/*******************************************************/
 function preload() {
     gameBackground = loadImage('Images/gameBackground.jpg');
     startBackground = loadImage('Images/startBackground.jpg');
@@ -43,6 +39,7 @@ function preload() {
     coinI = loadImage('Images/coin.png');
     heartI = loadImage('Images/Heart.png');
 }
+
 /*******************************************************/
 // setup()
 /*******************************************************/
@@ -79,6 +76,7 @@ function setup() {
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     heartI.resize(25, 0);
     
+//Key presses
 document.addEventListener("keydown", function(event) {
     if (event.code === "Enter") {
         if (screenSelector === "start" || screenSelector === "instructions" || screenSelector === "end") {
@@ -117,103 +115,7 @@ function draw() {
         console.log("wrong screen - you shouldnt get here")
     }
 }
-
-function playerControls() {
-    //Player controls for flying jetpack
-    document.addEventListener("keydown", function(event) {
-        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
-            player.vel.y = -10;
-        }
-    });
-
-    document.addEventListener("keyup", function(event) {
-        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
-            player.vel.y = 0;
-        }
-    });
-}
-
-//Create rockets
-function newRocket() {
-    //create a new rocket object with the following properties
-    rocket = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_HEIGHT)), ROCKET_WIDTH, ROCKET_HEIGHT, 'k');
-    rocket.addImage(rocketI);
-    rocket.vel.x = -5;
-    rockets.add(rocket);
-}
-
-//Player loses life if collision with rocket
-function loseLife(_player, _rocket) {
-    //remove the rocket
-    _rocket.remove();
-
-    lives--; // Decrease the lives variable by 1 when the player collides with a rocket
-}
-
-function newCoin() {
-    //create a new coin object with the following properties
-    coin = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
-    coin.addImage(coinI);
-    coin.vel.x = -5;
-    coins.add(coin);
-}
-
-// Function to update position of rockets and coins
-function updateSprites() {
-        // Remove rockets and coins touching the floor or ceiling
-    rockets.collide(floor, function(rocket) {
-        rocket.remove();
-    });
-    coins.collide(floor, function(coin) {
-        coin.remove();
-    });
-    rockets.collide(ceiling, function(rocket) {
-        rocket.remove();
-    });
-    coins.collide(ceiling, function(coin) {
-        coin.remove();
-    });
-    
-       // Reset out-of-bounds rockets and coins
-    rockets.forEach(rocket => {
-        if (rocket.position.x < -ROCKET_WIDTH / 2) {
-            rocket.position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
-            rocket.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
-        }
-    });
-    coins.forEach(coin => {
-        if (coin.position.x < -COIN_DIAMETER / 2) {
-            coin.position.x = SCREEN_WIDTH + COIN_DIAMETER / 2;
-            coin.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
-        }
-    });
-}
-
-
-function playerHitCoin(_coin, _player) {
-    console.log("addCoin")
-    coinCount++;
-    _coin.remove();
-}
-
-function tooYoung() {
-    background(startBackground);
-}
-
-// Ask the user for their name
-function askUserName() {
-    while (userNameIsInvalid) {
-        userName = prompt("Hello there, \n what is your name?");
-        if (userName == null) {
-            stopPropogation();
-        }
-        if (userName == " " || userName == "" || !isNaN(userName)) {
-            alert("The username was invalid. You must enter a valid username.");
-        } else {
-            userNameIsInvalid = false;
-        }
-    }
-}
+/******************************************************/
 //Screen functions
 /******************************************************/
 //Welcomes the user to game
@@ -293,7 +195,7 @@ function gameScreen() {
             if (lives <= 1) {
                 screenSelector = "end";
             }
-            lives--; // Decrease the lives variable by 1 when the player collides with a rocket
+            lives--;
         }
     }
 
@@ -360,8 +262,108 @@ function resetGame() {
     //reset score and coinCount to 0 at the start of each run
     score = 0;
     coinCount = 0;
-    lives = 3; // Reset the lives variable to 3 at the start of each run
+    lives = 3;
+}
+
+/*******************************************************/
+// Additional Helper Functions
+/*******************************************************/
+function playerControls() {
+    //Player controls for flying jetpack
+    document.addEventListener("keydown", function(event) {
+        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
+            player.vel.y = -10;
+        }
+    });
+
+    document.addEventListener("keyup", function(event) {
+        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
+            player.vel.y = 0;
+        }
+    });
+}
+
+//Create rockets
+function newRocket() {
+    //create a new rocket object with the following properties
+    rocket = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_HEIGHT)), ROCKET_WIDTH, ROCKET_HEIGHT, 'k');
+    rocket.addImage(rocketI);
+    rocket.vel.x = -5;
+    rockets.add(rocket);
+}
+
+//Player loses life if collision with rocket
+function loseLife(_player, _rocket) {
+    //remove the rocket
+    _rocket.remove();
+
+    lives--;
+}
+
+function newCoin() {
+    //create a new coin object with the following properties
+    coin = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
+    coin.addImage(coinI);
+    coin.vel.x = -5;
+    coins.add(coin);
+}
+
+// Function to update position of rockets and coins
+function updateSprites() {
+        // Remove rockets and coins touching the floor or ceiling
+    rockets.collide(floor, function(rocket) {
+        rocket.remove();
+    });
+    coins.collide(floor, function(coin) {
+        coin.remove();
+    });
+    rockets.collide(ceiling, function(rocket) {
+        rocket.remove();
+    });
+    coins.collide(ceiling, function(coin) {
+        coin.remove();
+    });
+    
+       // Reset out-of-bounds rockets and coins
+    rockets.forEach(rocket => {
+        if (rocket.position.x < -ROCKET_WIDTH / 2) {
+            rocket.position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
+            rocket.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+        }
+    });
+    coins.forEach(coin => {
+        if (coin.position.x < -COIN_DIAMETER / 2) {
+            coin.position.x = SCREEN_WIDTH + COIN_DIAMETER / 2;
+            coin.position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+        }
+    });
+}
+
+
+function playerHitCoin(_coin, _player) {
+    console.log("addCoin")
+    coinCount++;
+    _coin.remove();
+}
+
+function tooYoung() {
+    background(startBackground);
+}
+
+// Ask the user for their name
+function askUserName() {
+    while (userNameIsInvalid) {
+        userName = prompt("Hello there, \n what is your name? (Press 'Cancel' to use default name)");
+        if (userName === null) {
+            userName = "Player"; // Set default username to "Player" if prompt is cancelled
+            userNameIsInvalid = false;
+        } else if (!userName.trim() || !isNaN(userName)) {
+            alert("The username was invalid. You must enter a valid username.");
+        } else {
+            userNameIsInvalid = false;
+        }
+    }
 }
 /*******************************************************/
-//  END OF APP
+//  END OF CODE
 /*******************************************************/
