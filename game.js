@@ -14,9 +14,9 @@ let missiles;
 const MISSILE_WIDTH = 150;
 const MISSILE_HEIGHT = 25;
 
-    const SCREEN_WIDTH = 1000;
-    const SCREEN_HEIGHT = 500;
-    
+const SCREEN_WIDTH = 1000;
+const SCREEN_HEIGHT = 500;
+
 //Coins
 const COIN_DIAMETER = 50;
 
@@ -41,7 +41,7 @@ function preload() {
     missileI = loadImage('Images/missile.png');
     playerI = loadImage('Images/jetpack.png');
     coinI = loadImage('Images/coin.png');
-    heartI = loadImage('Images/heart.png'); // Load the heart icon/image
+    heartI = loadImage('Images/heart.png');
 }
 /*******************************************************/
 // setup()
@@ -78,6 +78,23 @@ function setup() {
     playerI.resize(80, 80);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     heartI.resize(50, 0);
+    
+document.addEventListener("keydown", function(event) {
+    if (event.code === "Enter") {
+        if (screenSelector === "start" || screenSelector === "instructions" || screenSelector === "end") {
+            screenSelector = "game";
+            resetGame();
+        }
+    } else if (event.code === "KeyI" && screenSelector === "start") {
+        console.log("Key pressed!");
+        screenSelector = "instructions";
+        instructions();
+    } else if (event.code === "KeyB" && screenSelector === "instructions") {
+        screenSelector = "start";
+    } else if (event.code === "KeyH" && screenSelector === "end") {
+        screenSelector = "start";
+    }
+});
 }
 /*******************************************************/
 // draw()
@@ -137,7 +154,6 @@ function newCoin() {
     //create a new coin object with the following properties
     coin = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
     coin.addImage(coinI);
-    coin.overlaps(player, playerHitCoin);
     coin.vel.x = -5;
     coins.add(coin);
 }
@@ -198,24 +214,6 @@ function startScreen() {
     textSize(24);
     text("Press Enter to Start", 600, 300);
     text("Press I for Instructions", 600, 350);
-
-    document.addEventListener("keydown", function(event) {
-        if (event.code === "Enter") {
-            console.log("Key pressed!");
-            if (screenSelector == "start" || screenSelector == "end") {
-                screenSelector = "game"
-                resetGame();
-            }
-        }
-    })
-
-    document.addEventListener("keydown", function(event) {
-        if (event.code === "KeyI") {
-            console.log("Key pressed!");
-            screenSelector = "instructions"
-            instructions();
-        }
-    })
 }
 
 //Instructions screen
@@ -227,23 +225,10 @@ function instructions() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Instructions");
     textSize(24);
-    text("Use Up/Down Arrow Keys or W/S Keys to move player up and down");
-    textSize(14);
-    text("Avoid obstacles, collect coins, and try get a higher score");
+    text("Press B to go back", 100, 450);
+    text("Press Enter to Play", 700, 450);
 
-document.addEventListener("keydown", function(event) {
-        if (event.code === "Enter") {
-            screenSelector = "game"; // Switch to the game screen
-            resetGame(); // Reset the game
-        }
-        else if (event.code === "KeyB") {
-            screenSelector = "start"; // Switch to the start screen
-        }
-    });    
-    
-    
 }
 
 // During the game
@@ -302,7 +287,7 @@ function gameScreen() {
         c.position.y += c.velocity.y;
 
         // Check for collision between player and coin
-        if (player.overlap(c)) {
+        if (screenSelector === "game" && player.overlap(c)) {
             // Remove the coin
             c.remove();
 
