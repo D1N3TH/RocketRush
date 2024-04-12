@@ -41,7 +41,7 @@ function preload() {
     rocketI = loadImage('Images/rocket.png');
     playerI = loadImage('Images/player.png');
     coinI = loadImage('Images/coin.png');
-    heartI = loadImage('Images/heart.png');
+    heartI = loadImage('Images/Heart.png');
 }
 /*******************************************************/
 // setup()
@@ -77,7 +77,7 @@ function setup() {
     rocketI.resize(200, 50);
     playerI.resize(80, 80);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
-    heartI.resize(50, 0);
+    heartI.resize(25, 0);
     
 document.addEventListener("keydown", function(event) {
     if (event.code === "Enter") {
@@ -258,7 +258,7 @@ function gameScreen() {
 
     // Display hearts for lives
     for (let i = 0; i < lives; i++) {
-        image(heartI, 540 + i * 40, 15, 50, 50); // Adjust position and size as needed
+        image(heartI, 540 + i * 40, 15, 40, 40); // Adjust position and size as needed
     }
 
     // Check for collisions with rockets
