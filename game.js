@@ -9,10 +9,10 @@ let player;
 const PLAYER_WIDTH = 80;
 const PLAYER_HEIGHT = 80;
 
-//Missiles
-let missiles;
-const MISSILE_WIDTH = 150;
-const MISSILE_HEIGHT = 25;
+//Rockets
+let rockets;
+const ROCKET_WIDTH = 150;
+const ROCKET_HEIGHT = 25;
 
 const SCREEN_WIDTH = 1000;
 const SCREEN_HEIGHT = 500;
@@ -38,15 +38,15 @@ function preload() {
     gameBackground = loadImage('Images/gameBackground.jpg');
     startBackground = loadImage('Images/startBackground.jpg');
     instructionsBackground = loadImage('Images/instructions.jpg')
-    missileI = loadImage('Images/missile.png');
-    playerI = loadImage('Images/jetpack.png');
+    rocketI = loadImage('Images/rocket.png');
+    playerI = loadImage('Images/player.png');
     coinI = loadImage('Images/coin.png');
     heartI = loadImage('Images/heart.png');
 }
 /*******************************************************/
 // setup()
 /*******************************************************/
-// Create the player and the groups of missiles and coins
+// Create the player and the groups of rockets and coins
 function setup() {
     console.log("setup: ");
     new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -54,8 +54,8 @@ function setup() {
     // Add gravity to the world
     world.gravity.y = 20;
 
-    // Create groups of missiles and coins
-    missiles = new Group();
+    // Create groups of rockets and coins
+    rockets = new Group();
     coins = new Group();
 
     //Create the floor
@@ -74,7 +74,7 @@ function setup() {
     askUserName();
 
     //Image resizing
-    missileI.resize(200, 200);
+    rocketI.resize(200, 50);
     playerI.resize(80, 80);
     coinI.resize(COIN_DIAMETER, COIN_DIAMETER);
     heartI.resize(50, 0);
@@ -133,21 +133,21 @@ function playerControls() {
     });
 }
 
-//Create missiles
-function newMissile() {
-    //create a new missile object with the following properties
-    missile = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_HEIGHT)), MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
-    missile.addImage(missileI);
-    missile.vel.x = -5;
-    missiles.add(missile);
+//Create rockets
+function newRocket() {
+    //create a new rocket object with the following properties
+    rocket = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_HEIGHT)), ROCKET_WIDTH, ROCKET_HEIGHT, 'k');
+    rocket.addImage(rocketI);
+    rocket.vel.x = -5;
+    rockets.add(rocket);
 }
 
-//Player loses life if collision with missile
-function loseLife(_player, _missile) {
-    //remove the missile
-    _missile.remove();
+//Player loses life if collision with rocket
+function loseLife(_player, _rocket) {
+    //remove the rocket
+    _rocket.remove();
 
-    lives--; // Decrease the lives variable by 1 when the player collides with a missile
+    lives--; // Decrease the lives variable by 1 when the player collides with a rocket
 }
 
 function newCoin() {
@@ -158,12 +158,12 @@ function newCoin() {
     coins.add(coin);
 }
 
-// Function to update position of missiles and coins
+// Function to update position of rockets and coins
 function updateSprites() {
-    for (let i = missiles.length - 1; i >= 0; i--) {
-        if (missiles[i].position.x < -MISSILE_WIDTH / 2) {
-            missiles[i].position.x = SCREEN_WIDTH + MISSILE_WIDTH / 2;
-            missiles[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
+    for (let i = rockets.length - 1; i >= 0; i--) {
+        if (rockets[i].position.x < -ROCKET_WIDTH / 2) {
+            rockets[i].position.x = SCREEN_WIDTH + ROCKET_WIDTH / 2;
+            rockets[i].position.y = Math.round(random(20, SCREEN_WIDTH - 20));
         }
     }
     for (let i = coins.length - 1; i >= 0; i--) {
@@ -246,7 +246,7 @@ function gameScreen() {
     }
 
     if (frameCount > nextSpawn) {
-        newMissile();
+        newRocket();
         newCoin();
         nextSpawn = frameCount + random(40, 100);
     }
@@ -261,22 +261,22 @@ function gameScreen() {
         image(heartI, 540 + i * 40, 15, 50, 50); // Adjust position and size as needed
     }
 
-    // Check for collisions with missiles
-    for (let i = missiles.length - 1; i >= 0; i--) {
-        let m = missiles[i];
+    // Check for collisions with rockets
+    for (let i = rockets.length - 1; i >= 0; i--) {
+        let m = rockets[i];
         m.position.x += m.velocity.x;
         m.position.y += m.velocity.y;
 
-        // Check for collision between player and missile
+        // Check for collision between player and rocket
         if (player.overlap(m)) {
-            // Remove the missile
+            // Remove the rocket
             m.remove();
 
             // Lose life and if run out of lives, change to end screen
             if (lives <= 1) {
                 screenSelector = "end";
             }
-            lives--; // Decrease the lives variable by 1 when the player collides with a missile
+            lives--; // Decrease the lives variable by 1 when the player collides with a rocket
         }
     }
 
@@ -312,7 +312,7 @@ function endScreen() {
     background("grey")
     allSprites.visible = false;
     coins.vel.x = 0;
-    missiles.vel.x = 0;
+    rockets.vel.x = 0;
     textSize(50);
     fill(255);
     stroke(0);
@@ -322,8 +322,8 @@ function endScreen() {
     text("Your score was: " + score, 400, 200);
     text("You collected " + coinCount + " coins.", 400, 230);
     textSize(30);
-    text("Press Enter to restart", 100, 400);
-    text("Press H to go back Home", 550, 400)
+    text("Press Enter to restart", 550, 400);
+    text("Press H to go back Home", 100, 400)
 }
 
 function resetGame() {
@@ -332,14 +332,14 @@ function resetGame() {
         player.remove();
     }
 
-    // Clear existing missiles and coins
-    missiles.remove();
+    // Clear existing rockets and coins
+    rockets.remove();
     coins.remove();
 
     //create a new player object and add it to game
     player = new Sprite(PLAYER_WIDTH * 1.2, SCREEN_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT, 'd');
     player.addImage(playerI);
-    player.collides(missiles, loseLife);
+    player.collides(rockets, loseLife);
     //reset score and coinCount to 0 at the start of each run
     score = 0;
     coinCount = 0;
