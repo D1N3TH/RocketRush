@@ -14,6 +14,9 @@ let missiles;
 const MISSILE_WIDTH = 150;
 const MISSILE_HEIGHT = 25;
 
+    const SCREEN_WIDTH = 1000;
+    const SCREEN_HEIGHT = 500;
+    
 //Coins
 const COIN_DIAMETER = 50;
 
@@ -32,8 +35,9 @@ const SCORE_INCREMENT_DELAY = 5; // Adjust this value to control the speed of sc
 
 //Load images in advance
 function preload() {
-    gameBackground = loadImage('Images/background.jpg');
-    startBackground = loadImage('Images/startImage.jpg');
+    gameBackground = loadImage('Images/gameBackground.jpg');
+    startBackground = loadImage('Images/startBackground.jpg');
+    instructionsBackground = loadImage('Images/instructions.jpg')
     missileI = loadImage('Images/missile.png');
     playerI = loadImage('Images/jetpack.png');
     coinI = loadImage('Images/coin.png');
@@ -45,24 +49,21 @@ function preload() {
 // Create the player and the groups of missiles and coins
 function setup() {
     console.log("setup: ");
-    new Canvas(windowWidth, windowHeight)
+    new Canvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     // Add gravity to the world
     world.gravity.y = 20;
-
-    SCREEN_WIDTH = windowWidth;
-    SCREEN_HEIGHT = windowHeight;
 
     // Create groups of missiles and coins
     missiles = new Group();
     coins = new Group();
 
     //Create the floor
-    floor = new Sprite(windowWidth / 2, windowHeight, windowWidth, 4, 's')
+    floor = new Sprite(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 4, 's')
     floor.color = color('black')
 
     //Create the ceiling
-    ceiling = new Sprite(0, 0, windowWidth * 2, 4, 's')
+    ceiling = new Sprite(0, 0, SCREEN_WIDTH * 2, 4, 's')
     ceiling.color = color('black')
 
     // Initialize the score and lives variables
@@ -118,11 +119,9 @@ function playerControls() {
 //Create missiles
 function newMissile() {
     //create a new missile object with the following properties
-    missile = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - MISSILE_HEIGHT / 2, MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
+    missile = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_HEIGHT)), MISSILE_WIDTH, MISSILE_HEIGHT, 'k');
     missile.addImage(missileI);
     missile.vel.x = -5;
-    missile.x = 1400;
-    missile.y = Math.round(random(20, SCREEN_WIDTH));
     missiles.add(missile);
 }
 
@@ -136,12 +135,10 @@ function loseLife(_player, _missile) {
 
 function newCoin() {
     //create a new coin object with the following properties
-    coin = new Sprite((SCREEN_WIDTH - 100), SCREEN_HEIGHT - COIN_DIAMETER / 2, COIN_DIAMETER, COIN_DIAMETER, 'k');
+    coin = new Sprite((SCREEN_WIDTH + 50), Math.round(random(20, SCREEN_WIDTH)), COIN_DIAMETER, COIN_DIAMETER, 'k');
     coin.addImage(coinI);
     coin.overlaps(player, playerHitCoin);
     coin.vel.x = -5;
-    coin.x = 1400;
-    coin.y = Math.round(random(20, SCREEN_WIDTH));
     coins.add(coin);
 }
 
@@ -197,9 +194,10 @@ function startScreen() {
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("Hello " + userName + ", welcome to Rocket Rush!", 50, 50);
+    text("Hello " + userName + ", welcome to Rocket Rush!", 400, 200);
     textSize(24);
-    text("Press Enter to Start", 50, 110);
+    text("Press Enter to Start", 600, 300);
+    text("Press I for Instructions", 600, 350);
 
     document.addEventListener("keydown", function(event) {
         if (event.code === "Enter") {
@@ -223,7 +221,7 @@ function startScreen() {
 //Instructions screen
 function instructions() {
     console.log("instructions")
-    background("red")
+    background(instructionsBackground)
     allSprites.visible = false;
     textSize(32);
     fill(255);
@@ -234,6 +232,18 @@ function instructions() {
     text("Use Up/Down Arrow Keys or W/S Keys to move player up and down");
     textSize(14);
     text("Avoid obstacles, collect coins, and try get a higher score");
+
+document.addEventListener("keydown", function(event) {
+        if (event.code === "Enter") {
+            screenSelector = "game"; // Switch to the game screen
+            resetGame(); // Reset the game
+        }
+        else if (event.code === "KeyB") {
+            screenSelector = "start"; // Switch to the start screen
+        }
+    });    
+    
+    
 }
 
 // During the game
@@ -314,15 +324,17 @@ function gameScreen() {
 //Game over screen
 function endScreen() {
     console.log("YouDied")
-    background("red")
+    background("grey")
     allSprites.visible = false;
+    coins.vel.x = 0;
+    missiles.vel.x = 0;
     textSize(32);
     fill(255);
     stroke(0);
     strokeWeight(4);
-    text("You died! Better luck next time :-(", 50, 50);
+    text("Game Over!", 50, 50);
     textSize(24);
-    text("your score was: " + score, 50, 110);
+    text("Your score was: " + score, 50, 110);
     text("You collected " + coinCount + " coins.", 50, 150);
     textSize(14);
     text("Press Enter to restart", 50, 200);
